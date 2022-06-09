@@ -1,156 +1,245 @@
-<script>
-  // import io from "socket.io-client";
-  import { Line } from "vue-chartjs";
-  import {
-    Chart as ChartJS,
-    Title,
-    Tooltip,
-    Legend,
-    LineElement,
-    LinearScale,
-    PointElement,
-    CategoryScale,
-    TimeScale,
-  } from "chart.js";
-  // import dayjs from "dayjs";
-  ChartJS.register(
-    Title,
-    Tooltip,
-    Legend,
-    LineElement,
-    LinearScale,
-    PointElement,
-    CategoryScale,
-    TimeScale
-  );
-  export default {
-    components: {
-      Line,
-    },
-    data() {
-      return {
-        duration : 60, 
-        smoothness : 30,
-        styleBtnChoice: 'btn-choice', 
-        loaded: false,
-        intervalJob: null,
-        chartData: {},
-        chartOption: {
-          plugins: {
-              title:{
-                  display:true,
-                  text:"Average of past 1 hr"
-              }
-          }, 
-          maintainAspectRatio: false,
-          scales: {
-            xAxis: {
-              type: "time",
-              time: {
-                unit: "hour",
-              },
-            },
-            y: {
-            },
-          },
-          elements: {
-            point: {
-              radius: 0,
-            },
-          },
-        },
-      };
-    },
-    methods: {
-      // async getChartHistory() {
-      //   this.loaded = false;
-      //   try {
-      //     const res = await fetch(
-      //       `http://localhost:3000/device/chart?deviceID=${this.deviceID}&duration=${this.duration*60}&information=${this.information}&smoothness=${this.smoothness}`
-      //     );
-      //     let formatted = (await res.json()).data.map((h) => {
-      //       let output = {};
-      //       output.x = h.time;
-      //       output.y = dayjs(h.value).toDate();
-      //       return output;
-      //     });
-      //     this.chartData = {
-      //       datasets: [
-      //         {
-      //           label: this.information,
-      //           borderColor: "red",
-      //           data: formatted,
-      //           cubicInterpolationMode: 'monotone',
-      //           tension:0.1,
-      //         },
-      //       ],
-      //     };
-      //     this.loaded = true;
-      //   } catch (error) {
-      //       console.log(error)
-      //   }
-      // },
-      changeGraphLine(duration, smoothness){
-          this.duration = duration
-          this.smoothness = smoothness
-          this.chartOption.plugins.title.text = `Average of past ${this.duration/60} hr`
-          // this.getChartHistory()
-      }
-    },
-    props: {
-      deviceID: String,
-      information: String,
-      min: Number,
-      max: Number,
-    },
-    // mounted() {
-    //   this.getChartHistory()
-    // },
-  };
-</script>
-
 <template>
-    <div class="container">
-      <Line
-      v-if="this.loaded"
-      :width="200"
-      :height="200"
-      :chart-data="chartData"
-      :chart-options="chartOption"
-      :chart-id="`${this.deviceID}-${this.information}`"
-      />
-
-      <p v-else class = "loading">Loading chart...</p>
-      <!-- <div>
-          <button :class="styleBtnChoice" @click="this.changeGraphLine(60,30)">1hr</button>
-          <button :class="styleBtnChoice" @click="this.changeGraphLine(720, 900)">12hr</button>
-          <button :class="styleBtnChoice" @click="this.changeGraphLine(1440, 1800)">24hr</button>
-      </div> -->
-    </div>
+  <div>
+    <!-- <ParameterBox/> -->
+    <!-- <p>loading chart...</p> -->
+    <Line
+    v-if="this.loaded"
+    :width="200"
+    :height="200"
+    :chart-data="chartData"
+    :chart-options="chartOption"
+    :chart-id="`${this.deviceID}-${this.field}`"
+  />
+  <p v-else>Chart is loading...</p>
+  </div>
 </template>
 
+<script>
+// import { startDate, endDate } from "./ParameterBox.vue"
+import { Line } from "vue-chartjs";
+// import ParameterBox from './ParameterBox.vue';
+import {
+  Chart as ChartJS,
+  Title,
+  Tooltip,
+  Legend,
+  LineElement,
+  LinearScale,
+  PointElement,
+  CategoryScale,
+  TimeScale,
+} from "chart.js";
+// import "chartjs-adapter-moment";
+import dayjs from "dayjs";
+ChartJS.register(
+  Title,
+  Tooltip,
+  Legend,
+  LineElement,
+  LinearScale,
+  PointElement,
+  CategoryScale,
+  TimeScale
+);
+export default {
+  components: {
+    Line,
+    // ParameterBox
+  },
+  data() {
+    return {
+      loaded: false,
+      intervalJob: null,
+      chartData: {},
+      chartOption: {
+        // plugins: {
+        //     title:{
+        //         display:true,
+        //         text:"Average of past 1 hr"
+        //     }
+        // }, 
+        maintainAspectRatio: false,
+        scales: {
+          xAxis: {
+            type: "time",
+            time: {
+              unit: "hour",
+            },
+          },
+          y: {
+          },
+        },
+        elements: {
+          point: {
+            radius: 0,
+          },
+        },
+      },
+    };
+  },
+  methods: {
+    async getChart() {
+      this.loaded = false;
+      // console.log(this.startDate)
+      try {
+        const res = await fetch(
+          `http://localhost:9999/device/chart?start=${this.startDate}&stop=${this.stopDate}&field=${this.field}`
+        );
+        let formatted = (await res.json()).data.map((h) => {
+          let output = {};
+          output.x = h.time;
+          output.y = dayjs(h.value).toDate();
+          return output;
+        });
+        this.chartData = {
+          datasets: [
+            {
+              label: this.field,
+              borderColor: "red",
+              data: formatted,
+              cubicInterpolationMode: 'monotone',
+              tension:0.1,
+            },
+          ],
+        };
+        this.loaded = true;
+      } catch (error) {
+          console.log(error)
+      }
+    },
+  },
+  props: {
+    startDate: Date,
+    stopDate: Date,
+    t1: String, //topic 1
+    t2: String, //topic 2
+    t3: String, //topic 3
+    field1: String,
+    field2: String,
+  },
+  mounted() {
+    this.getChart()
+  },
+};
+</script>
+
+<!-- <script>
+//   import LineChart from "../LineChart.js";
+      
+//   export default {
+//     components: {
+//       LineChart
+//     },
+//     // props: {
+//     //   t1_humidity: Number,
+//     //   t1_temperature: Number,
+//     //   t2_humidity: Number,
+//     //   t2_temperature: Number,
+//     //   t3_humidity: Number,
+//     //   t3_temperature: Number
+// // },
+//     data() {
+//       return {
+//         datacollection: null,
+//         interval: null,
+//         time: null,  
+//         // t1_h: 0,
+//         // t1_t: 0,
+//         // t2_h: 0,
+//         // t2_t: 0,
+//         // t3_h: 0,
+//         // t3_t: 0.
+
+//       };
+//     },
+//     methods: {
+//       t1_fillData(t1_humidity, t1_temperature, t2_humidity, t2_temperature, t3_humidity, t3_temperature) {
+//         // get current date & time
+//         let now = new Date();
+//         // let hour = this.zeroPadding(now.getHours());
+//         let minute = this.zeroPadding(now.getMinutes());
+//         // let second = this.zeroPadding(now.getSeconds());
+
+//         this.datacollection = {
+//           // x-axis
+//           labels: [minute],
+//           datasets: [
+//             {
+//               label: "dummy-temp-1 Humidity",
+//               backgroundColor: "#1A73E8",
+//               // y-axis
+//               data: [t1_humidity]
+//             },
+//             {
+//               label: "dummy-temp-1 Temperature",
+//               backgroundColor: "#2b7518",
+//               data: [t1_temperature]
+//             },
+//             {
+//               label: "dummy-temp-2 Humidity",
+//               backgroundColor: "#1A73E8",
+//               // y-axis
+//               data: [t2_humidity]
+//             },
+//             {
+//               label: "dummy-temp-2 Temperature",
+//               backgroundColor: "#2b7518",
+//               data: [t2_temperature]
+//             },
+//             {
+//               label: "dummy-temp-3 Humidity",
+//               backgroundColor: "#1A73E8",
+//               // y-axis
+//               data: [t3_humidity]
+//             },
+//             {
+//               label: "dummy-temp-3 Temperature",
+//               backgroundColor: "#2b7518",
+//               data: [t3_temperature]
+//             }
+//           ]
+//         };
+//       },
+      
+      
+  
+//     },
+
+//     // beforeMount: {
+//     //   t1_h : this.t1_humidity,
+//     //   t1_t : this.t1_temperature,
+//     //   t2_h : this.t2_humidity,
+//     //   t2_t : this.t1_temperature,
+//     //   t3_h : this.t3_humidity,
+//     //   t3_t : this.t1_temperature,
+  
+//     // },
+//     created() {
+//       // update the time every second
+//       this.interval = setInterval(() => {
+//         // Concise way to format time according to system locale.
+//         // In my case this returns "3:48:00 am"
+//         this.time = Intl.DateTimeFormat(navigator.language, {
+//           hour: 'numeric',
+//           minute: 'numeric',
+//           second: 'numeric'
+//         }).format()
+//       }, 1000)
+//     }
+//   };
+// </script> -->
+
 <style>
-.container{
-  width: 1150px;
-  margin-top: 0px;
-  margin-left: 10px;
-  height: 450px;
-  background: #FEFAE0 0% 0% no-repeat padding-box;
-  border-radius: 25px;
-  opacity: 1;
-  text-align: center;
-  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-  display: inline-block;
-  vertical-align: middle;
-  line-height: normal;
+
+.chart {
+  height: 350px;
 }
 
-.loading{
+.loading {
   font: normal normal normal 20px/20px Sitka Subheading;
   text-align: center;
   letter-spacing: 0px;
   color: #D4A373;
   opacity: 1;
 }
-
 </style>

@@ -12,7 +12,6 @@
 </template>
 
 <script>
-// import { io } from "socket.io-client";
 
 export default { 
   props: {
@@ -21,18 +20,6 @@ export default {
     temperature: Number,
 
   },
-
-  // created() {
-  //   const socket = io("http://localhost:9999");
-  //   // let self = this;
-  //   socket.on("latestdata", async (data) => {
-  //     console.log(data)
-  //     if (data.deviceId === this.topic) {
-  //       this.field.temperature = data.temperature;
-  //       this.field.humidity = data.humidity;
-  //     }
-  //   });
-  // }
 };
 </script>
 

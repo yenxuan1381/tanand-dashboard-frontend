@@ -2,8 +2,8 @@
 
 export default {
     props: {
-        meanHumidity: Number,
-        meanTemperature: Number,
+        meanHumidity: String,
+        meanTemperature: String,
     }
 }
 </script>
@@ -58,7 +58,7 @@ export default {
     text-align: right;
     margin-left: auto;
     margin-right: 20px;
-    font: normal normal normal 70px/50px Sylfaen;
+    font: normal normal normal 65px/50px Sylfaen;
     letter-spacing: 0px;
     color: #987554;
     text-transform: uppercase;
