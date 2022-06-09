@@ -1,5 +1,5 @@
 <template>
-    <div class="bigContainer"> 
+    <div class="bigContainer">
         <DatePicker v-model="date" range="" placeholder="Select Range" class="size"></DatePicker>
         <GraphAnalysis
             :t1="t1"
@@ -7,8 +7,8 @@
             :t3="t3"
             :field1="this.field1"
             :field2="this.field2"
-            :startDate="this.s"
-            :stopDate="this.e"
+            :startDate="startDate"
+            :stopDate="endDate"
         />
     </div>
 
@@ -18,34 +18,43 @@
 import { ref, onMounted } from 'vue';
 import '@vuepic/vue-datepicker/dist/main.css';
 import GraphAnalysis from '@/components/GraphAnalysis.vue'
+import { io } from "socket.io-client";
+
 
 export default {
     components: {
         GraphAnalysis
     },
-    data(){
-        return{
-            s: new Date(),
-            e: new Date(),  
-        }
-        
-    },
 
+    watch: {
+        date: {
+            deep: true,
+            handler(val, old) {
+                console.log(old)
+                console.log('w', val, val.value);
+                this.startDate = val[0];
+                this.endDate = val[1];
+
+                console.log(val, this.startDate, this.endDate);
+            }
+        }
+    },
 
     setup() {
         const date = ref();
         const startDate = ref();
         const endDate = ref();
+
+        const s = new Date();
+        const e = new Date(new Date().setDate(s.getDate() + 7));
+
+        date.value = [s, e];
+
         onMounted(() => {
             const startDate = new Date();
             const endDate = new Date(new Date().setDate(startDate.getDate() + 7));
+
             date.value = [startDate, endDate];
-            this.s = startDate;
-            this.e = endDate;
-            console.log(startDate) //Thu Jun 09 2022 14:18:45 GMT+0800 (Malaysia Time)
-            console.log(this.s)
-            // this.s = startDate
-            // this.e = endDate
         })
 
         return {
@@ -61,9 +70,13 @@ export default {
         field1: String,
         field2: String,
     },
-//     mounted() {
-//         console.log(this.s, this.e) // undefined
-//   }
+    mounted() {
+        const socket = io("http://localhost:9999");
+        socket.emit("queryChart", {
+            start: this.startDate,
+            end: this.endDate
+        } )
+    }
 }
 </script>
 
@@ -76,17 +89,17 @@ export default {
 }
 
 .bigContainer {
-  width: 1150px;
-  margin-top: 0px;
-  margin-left: 10px;
-  height: 450px;
-  background: #FEFAE0 0% 0% no-repeat padding-box;
-  border-radius: 25px;
-  opacity: 1;
-  text-align: center;
-  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-  display: inline-block;
-  vertical-align: middle;
-  line-height: normal;
+    width: 1150px;
+    margin-top: 0px;
+    margin-left: 10px;
+    height: 450px;
+    background: #FEFAE0 0% 0% no-repeat padding-box;
+    border-radius: 25px;
+    opacity: 1;
+    text-align: center;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    display: inline-block;
+    vertical-align: middle;
+    line-height: normal;
 }
 </style>

@@ -36,7 +36,6 @@
 import DeviceInfo from '@/components/DeviceInfo.vue'
 import MeanData from '@/components/MeanData.vue'
 import GraphBox from '@/components/GraphBox.vue'
-// import GraphAnalysis from '@/components/GraphAnalysis.vue'
 import { io } from "socket.io-client";
 
 export default {

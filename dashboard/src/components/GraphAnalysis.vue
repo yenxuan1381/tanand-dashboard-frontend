@@ -50,6 +50,7 @@ export default {
     return {
       loaded: false,
       intervalJob: null,
+      smoothness : 30,
       chartData: {},
       chartOption: {
         // plugins: {
@@ -80,10 +81,12 @@ export default {
   methods: {
     async getChart() {
       this.loaded = false;
-      // console.log(this.startDate)
+      console.log("hello", this.$props.startDate)
+      // const startTimestamp = Math.round(this.startDate.getTime()/1000);
+      // const endTimestamp = Math.round(this.endDate.getTime()/1000);
       try {
         const res = await fetch(
-          `http://localhost:9999/device/chart?start=${this.startDate}&stop=${this.stopDate}&field=${this.field}`
+          `http://localhost:9999/chart?start=${this.startDate}&stop=${this.stopDate}`
         );
         let formatted = (await res.json()).data.map((h) => {
           let output = {};
@@ -94,8 +97,15 @@ export default {
         this.chartData = {
           datasets: [
             {
-              label: this.field,
+              label: this.field1,
               borderColor: "red",
+              data: formatted,
+              cubicInterpolationMode: 'monotone',
+              tension:0.1,
+            },
+            {
+              label: this.field2,
+              borderColor: "blue",
               data: formatted,
               cubicInterpolationMode: 'monotone',
               tension:0.1,
