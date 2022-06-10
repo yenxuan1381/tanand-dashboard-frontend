@@ -40,8 +40,8 @@ export default {
 
     setup() {
         const date = ref();
-        const startDate = ref(new Date());
-        const endDate = ref(new Date(new Date().setDate(startDate.value.getDate() + 7)));
+        const endDate = ref(new Date());
+        const startDate = ref(new Date(new Date().setDate(endDate.value.getDate() -3)));
 
         // const s = new Date();
         // const e = new Date(new Date().setDate(s.getDate() + 7));

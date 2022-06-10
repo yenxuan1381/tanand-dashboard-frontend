@@ -53,8 +53,8 @@ export default {
             topic1: 'dummy-temp-1',
             topic2: 'dummy-temp-2',
             topic3: 'dummy-temp-3',
-            field1: 'Humidity',
-            field2: 'Temperature',
+            field1: 'humidity',
+            field2: 'temperature',
 
             t1: {
                 humidity: 0,
