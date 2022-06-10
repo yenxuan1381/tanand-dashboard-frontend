@@ -21,7 +21,7 @@
 <script>
 // import { startDate, endDate } from "./ParameterBox.vue"
 import { Line } from "vue-chartjs";
-import axios from 'axios';
+// import axios from 'axios';
 // import ParameterBox from './ParameterBox.vue';
 import {
   Chart as ChartJS,
@@ -56,7 +56,9 @@ export default {
       loaded: false,
       intervalJob: null,
       smoothness : 30,
-      chartData: {},
+      chartData: {
+
+      },
       chartOption: {
         // plugins: {
         //     title:{
@@ -91,8 +93,8 @@ export default {
       const endTimestamp = Math.round(this.stopDate.getTime()/1000);
       // console.log(startTimestamp, endTimestamp)
       try {
-        const res = await axios.get(
-          `http://localhost:9999/chart?start=${startTimestamp}&end=${endTimestamp}`
+        const res = await fetch(
+          `http://192.168.0.108:9999/chart?start=${startTimestamp}&end=${endTimestamp}`
         );
         console.log(res)// log the response got from the api
         let t1f1 = [];
@@ -103,7 +105,7 @@ export default {
         let t3f2 = [];
         let test = [];
 
-        console.log("json", res.data)
+        console.log("json", await res.json())
 
         // let resultData = (await res.json()).data.forEach((h) => {
         //   console.log("h",h)
@@ -153,7 +155,7 @@ export default {
         // console.log(resultData)
         
         this.chartData = {
-          labels: [], // x-axis
+          labels: ['Test1, Test2, Test3'], // x-axis
           datasets: [
             {
               label: this.t1.concat("-", this.field1),
