@@ -2,13 +2,17 @@
   <div>
     <!-- <ParameterBox/> -->
     <!-- <p>loading chart...</p> -->
-    <Line
+    <!-- <Line
     v-if="this.loaded"
-    :width="200"
-    :height="200"
+    :bind="true"
     :chart-data="chartData"
     :chart-options="chartOption"
-    :chart-id="`${this.deviceID}-${this.field}`"
+    :chart-id="labels"
+  /> -->
+  <Line
+    v-if="this.loaded"
+    :bind="true"
+    :chart-data="chartData"
   />
   <p v-else>Chart is loading...</p>
   </div>
@@ -17,6 +21,7 @@
 <script>
 // import { startDate, endDate } from "./ParameterBox.vue"
 import { Line } from "vue-chartjs";
+import axios from 'axios';
 // import ParameterBox from './ParameterBox.vue';
 import {
   Chart as ChartJS,
@@ -30,7 +35,7 @@ import {
   TimeScale,
 } from "chart.js";
 // import "chartjs-adapter-moment";
-import dayjs from "dayjs";
+// import dayjs from "dayjs";
 ChartJS.register(
   Title,
   Tooltip,
@@ -81,35 +86,117 @@ export default {
   methods: {
     async getChart() {
       this.loaded = false;
-      console.log("hello", this.$props.startDate)
-      // const startTimestamp = Math.round(this.startDate.getTime()/1000);
-      // const endTimestamp = Math.round(this.endDate.getTime()/1000);
+      // console.log("hello", this.startDate)
+      const startTimestamp = Math.round(this.startDate.getTime()/1000);
+      const endTimestamp = Math.round(this.stopDate.getTime()/1000);
+      // console.log(startTimestamp, endTimestamp)
       try {
-        const res = await fetch(
-          `http://localhost:9999/chart?start=${this.startDate}&stop=${this.stopDate}`
+        const res = await axios.get(
+          `http://localhost:9999/chart?start=${startTimestamp}&end=${endTimestamp}`
         );
-        let formatted = (await res.json()).data.map((h) => {
-          let output = {};
-          output.x = h.time;
-          output.y = dayjs(h.value).toDate();
-          return output;
-        });
+        console.log(res)// log the response got from the api
+        let t1f1 = [];
+        let t1f2 = [];
+        let t2f1 = [];
+        let t2f2 = [];
+        let t3f1 = [];
+        let t3f2 = [];
+        let test = [];
+
+        console.log("json", res.data)
+
+        // let resultData = (await res.json()).data.forEach((h) => {
+        //   console.log("h",h)
+        //   test.push(h);
+
+        //   if(h.field == this.field1 && h.device == this.t1){
+        //     // let output = [];
+        //     // t1f1.x = h.time;
+        //     let y = dayjs(h.value).toDate();
+        //     t1f1.push(y);
+        //     // return output; // output = {(x,y), (x,y), (x,y)}
+        //   }
+        //   if(h.field == this.field2 && h.device == this.t1){
+        //     // t1f2.x = h.time;
+        //     // t1f2.y = dayjs(h.value).toDate();
+        //     let y = dayjs(h.value).toDate();
+        //     t1f2.push(y);
+        //   }
+        //   if(h.field == this.field1 && h.device == this.t2){
+        //     // t2f1.x = h.time;
+        //     // t2f1.y = dayjs(h.value).toDate();
+        //     let y = dayjs(h.value).toDate();
+        //     t2f1.push(y);
+        //   }
+        //   if(h.field == this.field2 && h.device == this.t2){
+        //     // t2f2.x = h.time;
+        //     // t2f2.y = dayjs(h.value).toDate();
+        //     let y = dayjs(h.value).toDate();
+        //     t2f2.push(y);
+        //   }
+        //   if(h.field == this.field1 && h.device == this.t3){
+        //     // t3f1.x = h.time;
+        //     // t3f1.y = dayjs(h.value).toDate();
+        //     let y = dayjs(h.value).toDate();
+        //     t3f1.push(y);
+        //   }
+        //   if(h.field == this.field2 && h.device == this.t3){
+        //     // t3f2.x = h.time;
+        //     // t3f2.y = dayjs(h.value).toDate();
+        //     let y = dayjs(h.value).toDate();
+        //     t3f2.push(y);
+        //   }
+
+        // });
+        console.log("t1f1", t1f1)
+        console.log("test", test)
+        // console.log(resultData)
+        
         this.chartData = {
+          labels: [], // x-axis
           datasets: [
             {
-              label: this.field1,
+              label: this.t1.concat("-", this.field1),
               borderColor: "red",
-              data: formatted,
+              data: t1f1, // y-axis
               cubicInterpolationMode: 'monotone',
               tension:0.1,
             },
             {
-              label: this.field2,
-              borderColor: "blue",
-              data: formatted,
+              label: this.t1.concat("-", this.field2),
+              borderColor: "pink",
+              data: t1f2,
               cubicInterpolationMode: 'monotone',
               tension:0.1,
             },
+            {
+              label: this.t2.concat("-", this.field1),
+              borderColor: "yellow",
+              data: t2f1,
+              cubicInterpolationMode: 'monotone',
+              tension:0.1,
+            },
+            {
+              label: this.t2.concat("-", this.field2),
+              borderColor: "purple",
+              data: t2f2,
+              cubicInterpolationMode: 'monotone',
+              tension:0.1,
+            },
+            {
+              label: this.t3.concat("-", this.field1),
+              borderColor: "green",
+              data: t3f1,
+              cubicInterpolationMode: 'monotone',
+              tension:0.1,
+            },
+            {
+              label: this.t3.concat("-", this.field1),
+              borderColor: "blue",
+              data: t3f2,
+              cubicInterpolationMode: 'monotone',
+              tension:0.1,
+            }
           ],
         };
         this.loaded = true;

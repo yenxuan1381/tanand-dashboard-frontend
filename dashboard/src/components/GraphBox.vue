@@ -18,8 +18,6 @@
 import { ref, onMounted } from 'vue';
 import '@vuepic/vue-datepicker/dist/main.css';
 import GraphAnalysis from '@/components/GraphAnalysis.vue'
-import { io } from "socket.io-client";
-
 
 export default {
     components: {
@@ -42,13 +40,13 @@ export default {
 
     setup() {
         const date = ref();
-        const startDate = ref();
-        const endDate = ref();
+        const startDate = ref(new Date());
+        const endDate = ref(new Date(new Date().setDate(startDate.value.getDate() + 7)));
 
-        const s = new Date();
-        const e = new Date(new Date().setDate(s.getDate() + 7));
+        // const s = new Date();
+        // const e = new Date(new Date().setDate(s.getDate() + 7));
 
-        date.value = [s, e];
+        date.value = [startDate.value, endDate.value];
 
         onMounted(() => {
             const startDate = new Date();
@@ -69,13 +67,6 @@ export default {
         t3: String, //topic 3
         field1: String,
         field2: String,
-    },
-    mounted() {
-        const socket = io("http://localhost:9999");
-        socket.emit("queryChart", {
-            start: this.startDate,
-            end: this.endDate
-        } )
     }
 }
 </script>

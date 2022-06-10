@@ -12,6 +12,7 @@
     "@influxdata/influxdb-client-apis": "^1.26.0",
     "@syncfusion/ej2-vue-charts": "^20.1.59",
     "@vuepic/vue-datepicker": "^3.2.2",
+    "axios": "^0.27.2",
     "chart.js": "^3.8.0",
     "core-js": "^3.8.3",
     "dayjs": "^1.11.3",
