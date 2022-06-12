@@ -1,6 +1,6 @@
 <template>
     <div class="bigContainer">
-        <DatePicker v-model="date" range="" placeholder="Select Range" class="size"></DatePicker>
+        <DatePicker v-model="date" range="" placeholder="Select Range" class="size" ></DatePicker>
         <GraphAnalysis
             :t1="t1"
             :t2="t2"
@@ -58,9 +58,10 @@ export default {
         return {
             date,
             startDate,
-            endDate
+            endDate,
         }
     },
+    
     props: {
         t1: String, //topic 1
         t2: String, //topic 2
@@ -80,7 +81,7 @@ export default {
 }
 
 .bigContainer {
-    width: 1150px;
+    width: 1500px;
     margin-top: 0px;
     margin-left: 10px;
     height: 450px;
