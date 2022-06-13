@@ -2,15 +2,16 @@
   <div>
     <LineChart v-if="this.loaded"  
     :chart-data="chartData" 
+    :chart-options="chartOption"
     :borderWidth="borderWidth"
-    :width="1200"
-    :height="300"/> 
+    :width="1450"
+    :height="500"/> 
     <p v-else>Chart is loading...</p> 
   </div>
 </template>
 
 <script>
-
+import dayjs from "dayjs";
 import { Line as LineChart} from "vue-chartjs";
 import {
   Chart as ChartJS,
@@ -46,29 +47,30 @@ export default {
 
       },
       chartOption: {
-        plugins: {
-          title: {
-            display: true,
-            text: "All Data"
-          }
-        },
+        // plugins: {
+        //   title: {
+        //     display: true,
+        //     text: "All Data",
+        //   }
+        // },
         maintainAspectRatio: false,
-        scales: {
-          xAxis: {
-            type: "time",
-            time: {
-              unit: "minute",
-            },
-          },
-          yAxis: {
-            type: "value"
-          },
-        },
-        elements: {
-          point: {
-            radius: 0,
-          },
-        },
+        responsive: false,
+        // scales: {
+        //   xAxis: {
+        //     type: "time",
+        //     time: {
+        //       unit: "minute",
+        //     },
+        //   },
+        //   yAxis: {
+        //     type: "value"
+        //   },
+        // },
+        // elements: {
+        //   point: {
+        //     radius: 0,
+        //   },
+        // },
       },
     };
   },
@@ -149,7 +151,7 @@ export default {
         let t1f1 = (testT1F1).map((h) => {
           // let output = [];
           let output = {};
-          output.x = h.time;      // define object x value
+          output.x = dayjs(h.time).format('DD/MM/YY HH:mm');      // define object x value
           output.y = h.value;     // define object y value
           // console.log(output)
           return output;          // add this object into resultData array
@@ -158,7 +160,7 @@ export default {
         let t1f2 = (testT1F2).map((h) => {
             // let output = [];
             let output = {};
-            output.x = h.time;      // define object x value
+            output.x = dayjs(h.time).format('DD/MM/YY HH:mm');      // define object x value
             output.y = h.value;     // define object y value
             return output;          // add this object into resultData array
           
@@ -167,7 +169,7 @@ export default {
         let t2f1 = (testT2F1).map((h) => {
             // let output = [];
             let output = {};
-            output.x = h.time;      // define object x value
+            output.x = dayjs(h.time).format('DD/MM/YY HH:mm');      // define object x value
             output.y = h.value;     // define object y value
             return output;          // add this object into resultData array
           
@@ -176,7 +178,7 @@ export default {
         let t2f2 = (testT2F2).map((h) => {
             // let output = [];
             let output = {};
-            output.x = h.time;      // define object x value
+            output.x = dayjs(h.time).format('DD/MM/YY HH:mm');      // define object x value
             output.y = h.value;     // define object y value
             return output;          // add this object into resultData array
           
@@ -185,7 +187,7 @@ export default {
         let t3f1 = (testT3F1).map((h) => {
             // let output = [];
             let output = {};
-            output.x = h.time;      // define object x value
+            output.x = dayjs(h.time).format('DD/MM/YY HH:mm');      // define object x value
             output.y = h.value;     // define object y value
             return output;          // add this object into resultData array
           
@@ -194,7 +196,7 @@ export default {
         let t3f2 = (testT3F2).map((h) => {
             // let output = [];
             let output = {};
-            output.x = h.time;      // define object x value
+            output.x = dayjs(h.time).format('DD/MM/YY HH:mm');      // define object x value
             output.y = h.value;     // define object y value
             return output;          // add this object into resultData array
           
@@ -263,14 +265,7 @@ export default {
     t3: String, //topic 3
     field1: String,
     field2: String,
-    // width: {
-    //   type: Number,
-    //   default: 200
-    // },
-    // height: {
-    //   type: Number,
-    //   default: 100
-    // },
+
     borderWidth: {
       type: Number,
       default: 2

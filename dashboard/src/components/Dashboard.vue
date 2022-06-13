@@ -44,8 +44,6 @@ export default {
         DeviceInfo,
         MeanData,
         GraphBox
-        // GraphAnalysis,
-        // ParameterBox
     },
 
     data() {
@@ -84,16 +82,12 @@ export default {
             this.mean.temperature = this.mean.temperature.toFixed(2);
             this.mean.humidity = this.mean.humidity.toFixed(2);
         },
-        // fillData(t1_humidity, t1_temperature, t2_humidity, t2_temperature, t3_humidity, t3_temperature) {
-        // this.$refs.GraphAnalysis.fillData(t1_humidity, t1_temperature, t2_humidity, t2_temperature, t3_humidity, t3_temperature)
-        // }
 
     },
     created() {
         const socket = io("http://localhost:9999");
         socket.on("latestdata", async (data) => {
             console.log(data)
-            //   console.log(this.mean.temperature)
             if (data.deviceId === this.topic1) {
                 this.t1.temperature = data.temperature;
                 this.t1.humidity = data.humidity;
@@ -105,9 +99,10 @@ export default {
             if (data.deviceId === this.topic3) {
                 this.t3.temperature = data.temperature;
                 this.t3.humidity = data.humidity;
-                // this.fillData(this.t1.humidity, this.t1.temperature, this.t2.humidity, this.t2.temperature, this.t3.humidity, this.t3.temperature)
                 this.calculateMean();
             }
+
+            // add device
         });
     }
 
